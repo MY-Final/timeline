@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { Calendar, Heart } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Calendar, Heart, ArrowLeft } from 'lucide-react'
 import { getImagesByDate } from '@/lib/images.ts'
 import eventsJson from '@/data/events.json'
 import './Timeline.css'
@@ -262,6 +263,10 @@ export default function TimelinePage() {
       <FloatingDots />
 
       <header className="hero">
+        <Link to="/" className="hero-back" aria-label="返回主页">
+          <ArrowLeft size={15} strokeWidth={1.8} aria-hidden="true" />
+          <span>主页</span>
+        </Link>
         <SparkleIcon className="hero-sparkle" />
         <QuoteIcon className="hero-quote" />
         <p className="hero-subtitle">THE JOURNEY OF US</p>

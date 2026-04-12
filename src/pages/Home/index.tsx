@@ -7,8 +7,8 @@ import './Home.css'
 const LOVE_START_DATE = new Date('2026-03-08T18:35:00')
 
 // ─── 修改这里来设置两人的名字 ────────────────────
-const PERSON_A = '你'
-const PERSON_B = 'Ta'
+const PERSON_A = '阳阳'
+const PERSON_B = '湘湘'
 
 // QQ 头像链接
 const avatarA: string | null = 'http://q.qlogo.cn/headimg_dl?dst_uin=3486159271&spec=640&img_type=jpg'
