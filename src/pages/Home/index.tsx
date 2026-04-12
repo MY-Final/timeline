@@ -51,21 +51,21 @@ function pad(n: number): string {
 }
 
 // ─────────────────────────────────────────────
-// Avatar component
+// Avatar
 // ─────────────────────────────────────────────
 function Avatar({ src, name }: { src: string | null; name: string }) {
   return (
-    <div className="avatar-wrap">
-      <div className="avatar-ring">
-        <div className="avatar-inner">
+    <div className="avatar-col">
+      <div className="avatar-frame">
+        <div className="avatar-img-wrap">
           {src ? (
             <img src={src} alt={`${name}的头像`} />
           ) : (
-            <User className="avatar-placeholder-icon" size={40} strokeWidth={1.5} aria-hidden="true" />
+            <User className="avatar-placeholder-icon" size={44} strokeWidth={1.2} aria-hidden="true" />
           )}
         </div>
       </div>
-      <span className="avatar-name">{name}</span>
+      <span className="avatar-name-label">{name}</span>
     </div>
   )
 }
@@ -84,65 +84,76 @@ export default function HomePage() {
 
   return (
     <main className="home-shell">
-      {/* Decorative petals */}
-      <div className="home-petal home-petal-1" aria-hidden="true" />
-      <div className="home-petal home-petal-2" aria-hidden="true" />
-      <div className="home-petal home-petal-3" aria-hidden="true" />
+      {/* Ambient orbs */}
+      <div className="home-orb home-orb-1" aria-hidden="true" />
+      <div className="home-orb home-orb-2" aria-hidden="true" />
+      <div className="home-orb home-orb-3" aria-hidden="true" />
 
-      <div className="home-card">
-        {/* Sub label */}
-        <p className="home-label">Our Story</p>
+      {/* Top: date drop-line */}
+      <div className="home-top">
+        <div className="date-badge">
+          <div className="date-badge-line" />
+          <p className="date-badge-text">Since {startDateStr}</p>
+        </div>
+      </div>
+
+      {/* Center content */}
+      <div className="home-center">
+        <p className="home-title">our story</p>
 
         {/* Couple avatars */}
-        <div className="couple-row">
+        <div className="couple-section" role="img" aria-label="我们的头像">
           <Avatar src={avatarA} name={PERSON_A} />
 
-          <div className="heart-connector" aria-hidden="true">
-            <div className="connector-dot" />
-            <Heart className="heart-icon" size={28} fill="currentColor" strokeWidth={0} />
-            <div className="connector-dot" />
+          <div className="heart-bridge" aria-hidden="true">
+            <div className="bridge-line" />
+            <Heart className="bridge-heart" size={30} fill="currentColor" strokeWidth={0} />
+            <div className="bridge-line" />
           </div>
 
           <Avatar src={avatarB} name={PERSON_B} />
         </div>
 
-        {/* Start date */}
-        <p className="start-date-text">自 {startDateStr} 起</p>
-
-        {/* Days counter */}
-        <div className="timer-block">
-          <p className="timer-title">在一起</p>
-          <div className="timer-days-row">
-            <span className="timer-days-num">{days}</span>
-            <span className="timer-days-label">天</span>
-          </div>
-
-          {/* h : m : s */}
-          <div className="timer-row" aria-label={`${hours}小时${minutes}分${seconds}秒`}>
-            <div className="timer-unit">
-              <span className="timer-value">{pad(hours)}</span>
-              <span className="timer-label">小时</span>
-            </div>
-            <span className="timer-sep" aria-hidden="true">:</span>
-            <div className="timer-unit">
-              <span className="timer-value">{pad(minutes)}</span>
-              <span className="timer-label">分钟</span>
-            </div>
-            <span className="timer-sep" aria-hidden="true">:</span>
-            <div className="timer-unit">
-              <span className="timer-value">{pad(seconds)}</span>
-              <span className="timer-label">秒</span>
-            </div>
+        {/* Days big number */}
+        <div className="days-display">
+          <p className="days-eyebrow">在一起</p>
+          <div className="days-num-row">
+            <span className="days-num">{days}</span>
+            <span className="days-unit">天</span>
           </div>
         </div>
 
-        <div className="home-divider" aria-hidden="true" />
+        {/* hh : mm : ss */}
+        <div className="hms-row" aria-label={`${hours}小时${minutes}分${seconds}秒`}>
+          <div className="hms-unit">
+            <span className="hms-value">{pad(hours)}</span>
+            <span className="hms-label">小时</span>
+          </div>
+          <span className="hms-sep" aria-hidden="true">:</span>
+          <div className="hms-unit">
+            <span className="hms-value">{pad(minutes)}</span>
+            <span className="hms-label">分钟</span>
+          </div>
+          <span className="hms-sep" aria-hidden="true">:</span>
+          <div className="hms-unit">
+            <span className="hms-value">{pad(seconds)}</span>
+            <span className="hms-label">秒</span>
+          </div>
+        </div>
 
         {/* CTA */}
         <Link to="/timeline" className="home-cta">
-          <BookOpen size={16} strokeWidth={1.5} aria-hidden="true" />
+          <BookOpen size={15} strokeWidth={1.5} aria-hidden="true" />
           查看我们的故事
         </Link>
+      </div>
+
+      {/* Bottom tagline */}
+      <div className="home-bottom">
+        <div className="bottom-tagline">
+          <p className="bottom-tagline-text">每一天都值得被记住</p>
+          <div className="bottom-tagline-line" />
+        </div>
       </div>
     </main>
   )
