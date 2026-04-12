@@ -778,3 +778,8 @@
   .hidden-card { opacity: 1; transform: none; }
   .timeline-card.revealed { transition: none; }
 }
+
+/* ---------- Fan card clickable (active state) ---------- */
+.fan-card.fan-clickable {
+  cursor: zoom-in;
+}

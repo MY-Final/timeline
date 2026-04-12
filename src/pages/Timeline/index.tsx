@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Heart, ArrowLeft } from 'lucide-react'
 import { getImagesByDate } from '@/lib/images.ts'
+import { getCardTransform } from '@/lib/gallery.ts'
+import { ImageLightbox } from '@/components/ui/common/ImageLightbox.tsx'
 import eventsJson from '@/data/events.json'
 import './Timeline.css'
 
@@ -78,52 +80,45 @@ interface PhotoGalleryProps {
 
 function PhotoGallery({ images, isActive }: PhotoGalleryProps) {
   const [hovered, setHovered] = useState<number | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const count = images.length
 
-  function getBaseAngle(i: number): number {
-    if (count === 1) return 0
-    const spread = count <= 2 ? 30 : count <= 3 ? 48 : 60
-    return -spread / 2 + i * (spread / (count - 1))
-  }
-
-  function getBaseX(i: number): number {
-    if (count === 1) return 0
-    const totalSpread = count <= 2 ? 40 : count <= 3 ? 60 : 80
-    return -totalSpread / 2 + i * (totalSpread / (count - 1))
-  }
-
-  function getTransform(i: number): string {
-    const angle = getBaseAngle(i)
-    const tx = getBaseX(i)
-    if (hovered === i && isActive) {
-      return `translateX(${tx}px) rotate(0deg) translateY(-60px) scale(1.1)`
-    }
-    if (hovered !== null && isActive) {
-      const shift = i < hovered ? -12 : 12
-      return `translateX(${tx + shift}px) rotate(${angle}deg) translateY(6px) scale(0.94)`
-    }
-    return `translateX(${tx}px) rotate(${angle}deg) translateY(0px) scale(1)`
+  function openLightbox(i: number) {
+    setLightboxIndex(i)
   }
 
   return (
-    <div className={`fan-gallery ${isActive ? 'fan-active' : 'fan-inactive'}`}>
-      {images.map((src, i) => (
-        <div
-          key={i}
-          className={`fan-card ${hovered === i && isActive ? 'fan-hovered' : ''}`}
-          style={{
-            transform: getTransform(i),
-            zIndex: hovered === i && isActive ? count + 20 : i + 1,
-          }}
-          onMouseEnter={() => isActive && setHovered(i)}
-          onMouseLeave={() => setHovered(null)}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img src={src} alt={`记忆照片 ${i + 1}`} className="fan-card-image" />
-          {count > 1 && <div className="fan-index">{i + 1}</div>}
-        </div>
-      ))}
-    </div>
+    <>
+      <div className={`fan-gallery ${isActive ? 'fan-active' : 'fan-inactive'}`}>
+        {images.map((src, i) => (
+          <div
+            key={i}
+            className={`fan-card ${hovered === i && isActive ? 'fan-hovered' : ''} ${isActive ? 'fan-clickable' : ''}`}
+            style={{
+              transform: getCardTransform(count, i, hovered, isActive),
+              zIndex: hovered === i && isActive ? count + 20 : i + 1,
+            }}
+            onMouseEnter={() => isActive && setHovered(i)}
+            onMouseLeave={() => setHovered(null)}
+            onClick={(e) => { e.stopPropagation(); if (isActive) openLightbox(i) }}
+          >
+            <img src={src} alt={`记忆照片 ${i + 1}`} className="fan-card-image" />
+            {count > 1 && <div className="fan-index">{i + 1}</div>}
+          </div>
+        ))}
+      </div>
+
+      {lightboxIndex !== null && (
+        <ImageLightbox
+          images={images}
+          index={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={() => setLightboxIndex((lightboxIndex - 1 + count) % count)}
+          onNext={() => setLightboxIndex((lightboxIndex + 1) % count)}
+          onJump={(i) => setLightboxIndex(i)}
+        />
+      )}
+    </>
   )
 }
 
