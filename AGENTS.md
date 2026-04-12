@@ -36,30 +36,41 @@ No test runner configured.
 src/
   main.tsx                  ← ReactDOM.createRoot entry
   App.tsx                   ← Root component (no router yet)
-  index.css                 ← Global CSS vars / dark mode
+  index.css                 ← Global CSS vars / dark mode + Tailwind import
   App.css                   ← App-scoped styles
   assets/
     hero.png                ← Imported as ES module (gets hashed in dist)
     images/YYYY-MM-DD/      ← User photos; add new dates as subfolders
+  components/ui/            ← shadcn/ui components (auto-generated, do not hand-edit)
+  lib/utils.ts              ← shadcn cn() utility
 public/
   icons.svg                 ← SVG sprite, use <use href="/icons.svg#name">
   favicon.svg
+components.json             ← shadcn config (style: base-nova, iconLibrary: lucide)
 ```
 
-No path aliases — all imports are relative, no `@/` shortcut.
+Path alias `@/` → `src/` is configured in both `vite.config.ts` and `tsconfig.app.json`.
 
 ---
 
 ## Styling
 
-Plain CSS, no Tailwind, no CSS Modules, no pre-processor.
+Tailwind CSS v4 (`@tailwindcss/vite` plugin) + shadcn/ui. No separate `tailwind.config.js` — v4 is configured via CSS.
 
-- Design tokens are CSS custom properties on `:root` in `index.css`
+- `@import "tailwindcss"` is at the top of `src/index.css`
+- Design tokens remain as CSS custom properties on `:root` (coexist with Tailwind)
 - Dark mode via `@media (prefers-color-scheme: dark)` only — no class toggle
-- Native CSS nesting is used (Vite handles it without PostCSS)
+- Native CSS nesting is used alongside Tailwind utilities
 - Main column: `1126px` wide, centered, `border-inline` borders
 - Responsive breakpoint: `@media (max-width: 1024px)`
 - Token names: `--text`, `--text-h`, `--bg`, `--border`, `--accent`, `--accent-bg`, `--shadow`, etc.
+
+### shadcn/ui
+
+- Add components: `npx shadcn@latest add <component>`
+- Style: `base-nova`, icon library: `lucide`
+- Components land in `src/components/ui/` — do not hand-edit generated files
+- Utility: `import { cn } from '@/lib/utils'`
 
 ---
 
