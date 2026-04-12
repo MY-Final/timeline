@@ -1,73 +1,105 @@
-# React + TypeScript + Vite
+# Timeline · 我们的故事
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+记录两个人之间每一个值得铭记的瞬间。
 
-Currently, two official plugins are available:
+**线上地址**：[https://my-final.github.io/timeline/](https://my-final.github.io/timeline/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 技术栈
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + TypeScript
+- Vite 6
+- Tailwind CSS v4
+- shadcn/ui（base-nova 主题）
+- react-router-dom（HashRouter）
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 本地开发
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# 安装依赖
+npm install
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# 启动开发服务器（HMR）
+npm run dev
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 类型检查 + 构建
+npm run build
+
+# 预览构建产物
+npm run preview
+
+# ESLint 检查
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 部署到 GitHub Pages
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+项目使用 `gh-pages` 一键部署。
+
+### 首次配置
+
+1. `vite.config.ts` 中已设置 `base: '/timeline/'`
+2. `App.tsx` 使用 `HashRouter`，避免静态服务 404
+
+### 部署命令
+
+```bash
+npm run deploy
 ```
+
+等价于 `npm run build && gh-pages -d dist`，会自动将 `dist/` 推送到 `gh-pages` 分支。
+
+### GitHub 仓库设置
+
+1. 进入仓库 **Settings → Pages**
+2. Source 选择 **Deploy from a branch**
+3. Branch 选 `gh-pages`，目录选 `/ (root)`
+4. 保存后约 1 分钟生效
+
+---
+
+## 项目结构
+
+```
+src/
+  main.tsx              # 入口
+  App.tsx               # 路由根组件（HashRouter）
+  index.css             # 全局 CSS 变量 + Tailwind
+  assets/
+    images/YYYY-MM-DD/  # 按日期存放照片
+  pages/
+    Home/               # 首页：恋爱计时器 + 双头像
+    Timeline/           # 时间轴页：记忆卡片流
+  data/
+    events.json         # 时间轴事件数据
+  lib/
+    images.ts           # 按日期自动加载图片
+  router/
+    index.tsx           # 路由配置
+```
+
+---
+
+## 自定义内容
+
+编辑 `src/pages/Home/index.tsx` 顶部的配置项：
+
+```ts
+// 恋爱开始日期
+const LOVE_START_DATE = new Date('2026-03-08T18:35:00')
+
+// 两人的名字
+const PERSON_A = '你'
+const PERSON_B = 'Ta'
+
+// QQ 头像（替换 QQ 号即可）
+const avatarA = 'http://q.qlogo.cn/headimg_dl?dst_uin=你的QQ号&spec=640&img_type=jpg'
+const avatarB = 'http://q.qlogo.cn/headimg_dl?dst_uin=对方QQ号&spec=640&img_type=jpg'
+```
+
+添加新事件：在 `src/data/events.json` 新增一条记录，照片放到 `src/assets/images/YYYY-MM-DD/` 下即可自动加载。
