@@ -6,7 +6,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/timeline" element={<TimelinePage />} />
+      <Route path="/detail" element={<TimelinePage />} />
     </Routes>
   )
 }
