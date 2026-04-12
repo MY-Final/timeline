@@ -727,3 +727,54 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-back { transition: none; }
 }
+
+/* ============================================
+   Scroll Reveal — IntersectionObserver driven
+   ============================================ */
+
+/* Initial hidden state */
+.hidden-card {
+  opacity: 0;
+}
+
+.hidden-card.from-left {
+  transform: translateX(-48px) translateY(20px);
+}
+
+.hidden-card.from-right {
+  transform: translateX(48px) translateY(20px);
+}
+
+/* Revealed state */
+.timeline-card.revealed {
+  opacity: 1;
+  transform: translateX(0) translateY(0) !important;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Keep existing active/inactive opacity on top of reveal */
+.timeline-card.revealed.inactive {
+  opacity: 0.2;
+  transform: translateY(24px) !important;
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.timeline-card.revealed.inactive:hover {
+  opacity: 0.4;
+  transform: translateY(16px) !important;
+}
+
+.timeline-card.revealed.active {
+  opacity: 1;
+  transform: translateY(0) !important;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hidden-card { opacity: 1; transform: none; }
+  .timeline-card.revealed { transition: none; }
+}

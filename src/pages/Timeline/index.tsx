@@ -6,6 +6,32 @@ import eventsJson from '@/data/events.json'
 import './Timeline.css'
 
 // ─────────────────────────────────────────────
+// Scroll reveal hook — 用 IntersectionObserver 监听元素进入视口
+// ─────────────────────────────────────────────
+function useScrollReveal(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement | null>(null)
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true)
+          obs.disconnect()
+        }
+      },
+      { threshold },
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+
+  return { ref, revealed }
+}
+
+// ─────────────────────────────────────────────
 // Data
 // ─────────────────────────────────────────────
 interface TimelineEventData {
@@ -114,12 +140,17 @@ interface EventCardProps {
 
 function EventCard({ event, index, isActive, cardRef, onActivate }: EventCardProps) {
   const isEven = index % 2 === 0
+  const { ref: revealRef, revealed } = useScrollReveal(0.12)
 
   return (
     <div
-      ref={cardRef}
-      className={`timeline-card ${isActive ? 'active' : 'inactive'} ${isEven ? 'layout-left' : 'layout-right'}`}
+      ref={(el) => {
+        revealRef.current = el
+        cardRef(el)
+      }}
+      className={`timeline-card ${isActive ? 'active' : 'inactive'} ${isEven ? 'layout-left' : 'layout-right'} ${revealed ? 'revealed' : 'hidden-card'} ${isEven ? 'from-left' : 'from-right'}`}
       onClick={onActivate}
+      style={{ transitionDelay: `${index * 0.05}s` }}
     >
       <div className="timeline-card-photo">
         <PhotoGallery images={event.images} isActive={isActive} />
