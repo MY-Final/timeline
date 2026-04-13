@@ -108,10 +108,7 @@
 
 /* ---------- I Love You输入指示器 ---------- */
 .ilove-you-indicator {
-  position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -126,6 +123,7 @@
   font-weight: 500;
   color: #e2a0b0;
   animation: indicator-appear 0.3s ease-out;
+  margin-bottom: 16px;
 }
 
 .ilove-you-text {

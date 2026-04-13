@@ -107,21 +107,7 @@ export default function HomePage() {
 
 
 
-      {/* I Love You input indicator */}
-      {inputProgress > 0 && (
-        <div className="ilove-you-indicator">
-          <span className="ilove-you-text">I Love You: </span>
-          {target.split('').map((char, i) => {
-            const targetChar = char === ' ' ? '\u00A0' : char
-            const isTyped = i < inputProgress
-            return (
-              <span key={i} className={`ilove-you-char ${isTyped ? 'typed' : ''}`}>
-                {targetChar}
-              </span>
-            )
-          })}
-        </div>
-      )}
+
 
       {/* Top: date drop-line */}
       <div className="home-top">
@@ -211,6 +197,21 @@ export default function HomePage() {
                 {key.replace('Arrow', '')}
               </span>
             ))}
+          </div>
+        )}
+        {/* I Love You input indicator */}
+        {inputProgress > 0 && (
+          <div className="ilove-you-indicator">
+            <span className="ilove-you-text">I Love You: </span>
+            {target.split('').map((char, i) => {
+              const targetChar = char === ' ' ? '\u00A0' : char
+              const isTyped = i < inputProgress
+              return (
+                <span key={i} className={`ilove-you-char ${isTyped ? 'typed' : ''}`}>
+                  {targetChar}
+                </span>
+              )
+            })}
           </div>
         )}
         <div className="bottom-tagline">
