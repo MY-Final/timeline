@@ -142,7 +142,7 @@ export default function HomePage() {
         </div>
 
         {/* CTA */}
-        <Link to="/detail" className="home-cta">
+        <Link to="/timeline" className="home-cta">
           <BookOpen size={15} strokeWidth={1.5} aria-hidden="true" />
           查看我们的故事
         </Link>

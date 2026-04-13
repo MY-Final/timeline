@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Heart, ArrowLeft, ArrowUpDown } from 'lucide-react'
+import { Calendar, Heart, ArrowLeft, ArrowUpDown, Tag } from 'lucide-react'
 import { getImagesByDate } from '@/lib/images.ts'
 import { getCardTransform } from '@/lib/gallery.ts'
 import { ImageLightbox } from '@/components/ui/common/ImageLightbox.tsx'
@@ -317,6 +317,14 @@ export default function TimelinePage() {
           <ArrowUpDown size={13} strokeWidth={1.8} aria-hidden="true" />
           <span>{ascending ? '正序' : '倒序'}</span>
         </button>
+        <Link
+          to="/tags"
+          className="hero-tag-link"
+          aria-label="按标签探索"
+        >
+          <Tag size={13} strokeWidth={1.8} aria-hidden="true" />
+          <span>标签</span>
+        </Link>
         <SparkleIcon className="hero-sparkle" />
         <QuoteIcon className="hero-quote" />
         <p className="hero-subtitle">THE JOURNEY OF US</p>
