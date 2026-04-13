@@ -63,8 +63,9 @@
 }
 
 .tag-back {
-  top: 28px;
-  left: 28px;
+  position: relative;
+  top: auto;
+  left: auto;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -74,7 +75,7 @@
 
 /* ---------- Tag Selection ---------- */
 .tag-selection {
-  padding: 40px 24px 40px;
+  padding: 20px 24px 40px;
   position: relative;
   z-index: 10;
 }
