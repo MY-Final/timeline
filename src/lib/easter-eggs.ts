@@ -153,3 +153,95 @@ export function useMouseTrail() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 }
+
+// ─────────────────────────────────────────────
+// I Love You 彩蛋 Hook
+// ─────────────────────────────────────────────
+const I_LOVE_YOU_TARGET = 'i love you'
+
+export function useILoveYou() {
+  const [active, setActive] = useState(false)
+  const [stage, setStage] = useState(0) // 0: idle, 1: avatars jumping, 2: page flip, 3: explosion, 4: love display
+  const [inputProgress, setInputProgress] = useState(0)
+  const inputBuffer = useRef('')
+  const timeoutRef = useRef<number | null>(null)
+
+  const startAnimation = useCallback(() => {
+    setActive(true)
+    setStage(1)
+    setInputProgress(0)
+
+    // 阶段1: 头像跳跃 (1.5秒)
+    setTimeout(() => setStage(2), 1500)
+
+    // 阶段2: 页面翻转 (1秒)
+    setTimeout(() => setStage(3), 2500)
+
+    // 阶段3: 爆炸效果 (1秒)
+    setTimeout(() => setStage(4), 3500)
+
+    // 阶段4: 显示爱心 (保持3秒)
+    setTimeout(() => {
+      setActive(false)
+      setStage(0)
+    }, 6500)
+  }, [])
+
+  useEffect(() => {
+    function handleKeydown(e: KeyboardEvent) {
+      if (active) return // 动画进行中不处理输入
+
+      // 忽略输入框
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+
+      const char = e.key.toLowerCase()
+
+      // 只接受字母和空格字符
+      if (!/[a-z ]/.test(char)) return
+
+      inputBuffer.current += char
+
+      // 更新进度显示 - 检查当前输入是否匹配目标字符串的开头
+      const currentInput = inputBuffer.current.toLowerCase()
+      const targetLower = I_LOVE_YOU_TARGET.toLowerCase()
+
+      let matchLength = 0
+      for (let i = 0; i < Math.min(currentInput.length, targetLower.length); i++) {
+        if (currentInput[i] === targetLower[i]) {
+          matchLength++
+        } else {
+          break
+        }
+      }
+
+      setInputProgress(matchLength)
+
+      // 检查是否匹配完整"i love you"
+      if (currentInput === targetLower) {
+        startAnimation()
+        inputBuffer.current = ''
+        // setInputProgress(0) 已经在startAnimation中设置了
+      }
+
+      // 限制缓冲区长度
+      if (inputBuffer.current.length > 50) {
+        inputBuffer.current = inputBuffer.current.slice(-50)
+      }
+
+      // 设置超时重置
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => {
+        inputBuffer.current = ''
+        setInputProgress(0)
+      }, 3000)
+    }
+
+    window.addEventListener('keydown', handleKeydown)
+    return () => {
+      window.removeEventListener('keydown', handleKeydown)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [active, startAnimation])
+
+  return { active, stage, inputProgress, target: I_LOVE_YOU_TARGET }
+}

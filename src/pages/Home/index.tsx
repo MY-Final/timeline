@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, User, BookOpen } from 'lucide-react'
-import { 
-  useFloatingHearts, 
-  useSecretClick, 
-  useKonamiCode, 
-  useLongPress, 
-  isAnniversary 
+import {
+  useFloatingHearts,
+  useSecretClick,
+  useKonamiCode,
+  useLongPress,
+  useILoveYou,
+  isAnniversary
 } from '@/lib/easter-eggs.ts'
 import './Home.css'
 
@@ -88,6 +89,7 @@ export default function HomePage() {
   const { active: secretMode, click: handleSecretClick } = useSecretClick(10, 400)
   const { active: konamiMode, progress: konamiProgress, sequence: konamiSequence } = useKonamiCode()
   const { progress: holdProgress, active: loveMode, start: handleHeartHoldStart, end: handleHeartHoldEnd } = useLongPress(2000)
+  const { active: iLoveYouActive, stage: iLoveYouStage, inputProgress, target } = useILoveYou()
   const anniversaryToday = isAnniversary(LOVE_START_DATE)
 
   const startDateStr = LOVE_START_DATE.toLocaleDateString('zh-CN', {
@@ -97,7 +99,7 @@ export default function HomePage() {
   })
 
   return (
-    <main className={`home-shell ${secretMode ? 'secret-mode' : ''} ${anniversaryToday ? 'anniversary' : ''} ${konamiMode ? 'konami-mode' : ''} ${loveMode ? 'love-mode' : ''}`}>
+    <main className={`home-shell ${secretMode ? 'secret-mode' : ''} ${anniversaryToday ? 'anniversary' : ''} ${konamiMode ? 'konami-mode' : ''} ${loveMode ? 'love-mode' : ''} ${iLoveYouActive ? `ilove-you-stage-${iLoveYouStage}` : ''}`}>
       {/* Ambient orbs */}
       <div className="home-orb home-orb-1" aria-hidden="true" />
       <div className="home-orb home-orb-2" aria-hidden="true" />
@@ -111,6 +113,22 @@ export default function HomePage() {
               {key.replace('Arrow', '')}
             </span>
           ))}
+        </div>
+      )}
+
+      {/* I Love You input indicator */}
+      {inputProgress > 0 && (
+        <div className="ilove-you-indicator">
+          <span className="ilove-you-text">I Love You: </span>
+          {target.split('').map((char, i) => {
+            const targetChar = char === ' ' ? '\u00A0' : char
+            const isTyped = i < inputProgress
+            return (
+              <span key={i} className={`ilove-you-char ${isTyped ? 'typed' : ''}`}>
+                {targetChar}
+              </span>
+            )
+          })}
         </div>
       )}
 
@@ -199,6 +217,23 @@ export default function HomePage() {
           <div className="bottom-tagline-line" />
         </div>
       </div>
+
+      {/* I Love You Easter Egg */}
+      {iLoveYouStage === 4 && (
+        <div className="ilove-you-display">
+          <div className="love-heart-big">💖</div>
+          <h1 className="love-text">我爱你</h1>
+          <div className="love-sparkles">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <span key={i} className="sparkle" style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 2}s`
+              }}>✨</span>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   )
 }
