@@ -780,7 +780,12 @@
   }
 }
 
-/* ---------- Position overrides for each button ---------- */
+/* ---------- Navigation buttons fixed positioning ---------- */
+.hero-nav-btn {
+  position: fixed !important;
+  z-index: 100;
+}
+
 .hero-back      { top: 24px; left: 28px; }
 .hero-sort-toggle { top: 24px; right: 28px; }
 .hero-tag-link  { top: 68px; right: 28px; }
