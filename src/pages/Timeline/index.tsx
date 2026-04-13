@@ -193,11 +193,25 @@ interface SideNavProps {
 }
 
 function SideNav({ events, activeIndex, onNavigate }: SideNavProps) {
+  const navRef = useRef<HTMLElement | null>(null)
+  const activeButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    const nav = navRef.current
+    const btn = activeButtonRef.current
+    if (!nav || !btn) return
+    const navRect = nav.getBoundingClientRect()
+    const btnRect = btn.getBoundingClientRect()
+    const offset = btnRect.left - navRect.left - navRect.width / 2 + btnRect.width / 2
+    nav.scrollBy({ left: offset, behavior: 'smooth' })
+  }, [activeIndex])
+
   return (
-    <nav className="side-nav" aria-label="时间线导航">
+    <nav ref={navRef} className="side-nav" aria-label="时间线导航">
       {events.map((ev, i) => (
         <button
           key={ev.id}
+          ref={activeIndex === i ? activeButtonRef : null}
           onClick={() => onNavigate(i)}
           className={`side-nav-item ${activeIndex === i ? 'active' : ''}`}
           aria-label={`跳转到 ${ev.title}`}

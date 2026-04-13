@@ -448,70 +448,7 @@
 }
 
 /* ---------- Side navigation ---------- */
-.side-nav {
-  position: fixed;
-  right: 28px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 50;
-  display: none;
-  flex-direction: column;
-  gap: 20px;
-}
-
-@media (min-width: 1024px) {
-  .side-nav {
-    display: flex;
-  }
-}
-
-.side-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  outline: none;
-}
-
-.side-nav-label {
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  font-weight: 600;
-  color: transparent;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.side-nav-item.active .side-nav-label {
-  color: #fb7185;
-}
-
-.side-nav-item:hover .side-nav-label {
-  color: #fda4af;
-}
-
-.side-nav-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #fecdd3;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-}
-
-.side-nav-item.active .side-nav-dot {
-  background: #fb7185;
-  transform: scale(1.4);
-  box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.15), 0 0 12px rgba(251, 113, 133, 0.3);
-}
-
-.side-nav-item:hover .side-nav-dot {
-  background: #fda4af;
-  transform: scale(1.2);
-}
+/* (styles live in Timeline.css — no overrides here) */
 
 /* ---------- Floating decorative dots ---------- */
 .floating-dots {
