@@ -10,6 +10,10 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="https://count.getloli.com/@MY-Final_timeline?name=timeline&theme=minecraft&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" alt="访问计数"/>
+</p>
+
 ---
 
 ## 🛠 技术栈
