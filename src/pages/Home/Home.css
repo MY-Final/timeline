@@ -511,6 +511,62 @@
   100% { color: #fb7185; }
 }
 
+/* Konami code input indicator */
+.konami-indicator {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.konami-key {
+  min-width: 24px;
+  height: 22px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(251, 113, 133, 0.4);
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  color: #e2a0b0;
+  backdrop-filter: blur(8px);
+  transition: all 0.15s ease;
+}
+
+.konami-key.pressed {
+  background: #fb7185;
+  color: white;
+  transform: scale(1.1);
+  border-color: #fb7185;
+}
+
+@media (prefers-color-scheme: dark) {
+  .konami-key {
+    background: rgba(26, 10, 16, 0.6);
+  }
+}
+
+/* Konami Code mode - classic cheat code */
+.konami-mode .home-shell {
+  filter: hue-rotate(180deg);
+}
+
+.konami-mode .avatar-img-wrap {
+  animation: avatar-spin 2s linear infinite;
+}
+
+@keyframes avatar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* Reduced motion disable all easter eggs */
 @media (prefers-reduced-motion: reduce) {
   .bridge-heart         { animation: none; }

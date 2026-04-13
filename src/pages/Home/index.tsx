@@ -86,7 +86,7 @@ export default function HomePage() {
   // Easter Eggs
   const { hearts, spawn: spawnHearts } = useFloatingHearts(12)
   const { active: secretMode, click: handleSecretClick } = useSecretClick(10, 400)
-  const konamiMode = useKonamiCode()
+  const { active: konamiMode, progress: konamiProgress, sequence: konamiSequence } = useKonamiCode()
   const { progress: holdProgress, active: loveMode, start: handleHeartHoldStart, end: handleHeartHoldEnd } = useLongPress(2000)
   const anniversaryToday = isAnniversary(LOVE_START_DATE)
 
@@ -102,6 +102,17 @@ export default function HomePage() {
       <div className="home-orb home-orb-1" aria-hidden="true" />
       <div className="home-orb home-orb-2" aria-hidden="true" />
       <div className="home-orb home-orb-3" aria-hidden="true" />
+
+      {/* Konami input indicator */}
+      {konamiProgress > 0 && (
+        <div className="konami-indicator">
+          {konamiSequence.map((key, i) => (
+            <span key={key} className={`konami-key ${i < konamiProgress ? 'pressed' : ''}`}>
+              {key.replace('Arrow', '')}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Top: date drop-line */}
       <div className="home-top">

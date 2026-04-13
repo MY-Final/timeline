@@ -60,19 +60,28 @@ const KONAMI_SEQUENCE = [
 
 export function useKonamiCode() {
   const [active, setActive] = useState(false)
+  const [progress, setProgress] = useState(0)
   const index = useRef(0)
 
   useEffect(() => {
     function handleKeydown(e: KeyboardEvent) {
+      // 忽略输入框里的按键
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      
       const key = e.key.toLowerCase()
-      if (key === KONAMI_SEQUENCE[index.current].toLowerCase()) {
+      const expected = KONAMI_SEQUENCE[index.current].toLowerCase()
+      
+      if (key === expected || e.code.toLowerCase() === expected) {
         index.current++
+        setProgress(index.current)
         if (index.current === KONAMI_SEQUENCE.length) {
           setActive(v => !v)
           index.current = 0
+          setProgress(0)
         }
-      } else {
+      } else if (e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt' && e.key !== 'Meta') {
         index.current = 0
+        setProgress(0)
       }
     }
 
@@ -80,7 +89,7 @@ export function useKonamiCode() {
     return () => window.removeEventListener('keydown', handleKeydown)
   }, [])
 
-  return active
+  return { active, progress, sequence: KONAMI_SEQUENCE }
 }
 
 // ─────────────────────────────────────────────
