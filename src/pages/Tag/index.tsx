@@ -227,7 +227,7 @@ export default function TagPage() {
       <header className="tag-header">
         <Link to="/timeline" className="hero-nav-btn tag-back" aria-label="返回时间线">
           <ArrowLeft size={15} strokeWidth={1.8} aria-hidden="true" />
-          <span>时间线</span>
+          <span>TIMELINE</span>
         </Link>
       </header>
 
