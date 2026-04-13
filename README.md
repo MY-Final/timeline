@@ -2,7 +2,7 @@
 
 记录两个人之间每一个值得铭记的瞬间。
 
-**线上地址**：[https://my-final.github.io/timeline/](https://my-final.github.io/timeline/)
+**线上地址**：[timeline.120403.xyz](timeline.120403.xyz)
 
 ---
 
