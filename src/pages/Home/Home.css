@@ -8,7 +8,7 @@
   min-height: 100svh;
   width: 100%;
   display: grid;
-  grid-template-rows: 1fr auto 1fr;
+  grid-template-rows: min-content 1fr min-content;
   align-items: center;
   justify-items: center;
   background:
@@ -451,7 +451,19 @@
   .home-cta             { transition: none; }
 }
 
-
+/* ---------- Tablet/Laptop ---------- */
+@media (max-width: 1024px) {
+  .home-title { margin-bottom: 24px; }
+  .couple-section { margin-bottom: 30px; }
+  .days-display { margin-bottom: 10px; }
+  .hms-row { margin-bottom: 26px; }
+  .home-bottom { padding-top: 12px; }
+  .home-orb-1 { width: 300px; height: 300px; }
+  .home-orb-2 { width: 250px; height: 250px; }
+  .home-orb-3 { width: 200px; height: 200px; }
+  .avatar-frame { width: 90px; height: 90px; }
+  .avatar-name-label { font-size: 13px; }
+}
 
 /* ---------- Mobile ---------- */
 @media (max-width: 480px) {

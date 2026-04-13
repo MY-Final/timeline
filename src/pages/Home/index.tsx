@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, User, BookOpen } from 'lucide-react'
 import {
@@ -34,7 +34,7 @@ interface TimerValue {
 }
 
 function useLoveTimer(startDate: Date): TimerValue {
-  const calc = (): TimerValue => {
+  const calc = useCallback((): TimerValue => {
     const diff = Math.max(0, Date.now() - startDate.getTime())
     const totalSeconds = Math.floor(diff / 1000)
     return {
@@ -43,14 +43,14 @@ function useLoveTimer(startDate: Date): TimerValue {
       minutes: Math.floor((totalSeconds % 3600) / 60),
       seconds: totalSeconds % 60,
     }
-  }
+  }, [startDate])
 
   const [value, setValue] = useState<TimerValue>(calc)
 
   useEffect(() => {
     const id = setInterval(() => setValue(calc()), 1000)
     return () => clearInterval(id)
-  }, [startDate])
+  }, [calc])
 
   return value
 }
