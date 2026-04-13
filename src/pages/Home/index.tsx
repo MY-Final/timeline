@@ -9,6 +9,7 @@ import {
   useILoveYou,
   isAnniversary
 } from '@/lib/easter-eggs.ts'
+import ILoveYouDisplay from '@/components/easter-eggs/ILoveYouDisplay.tsx'
 import './Home.css'
 
 // ─── 修改这里来设置恋爱开始日期 ───────────────────
@@ -221,21 +222,7 @@ export default function HomePage() {
       </div>
 
       {/* I Love You Easter Egg */}
-      {iLoveYouStage === 4 && (
-        <div className="ilove-you-display">
-          <div className="love-heart-big">💖</div>
-          <h1 className="love-text">我爱你</h1>
-          <div className="love-sparkles">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <span key={i} className="sparkle" style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`
-              }}>✨</span>
-            ))}
-          </div>
-        </div>
-      )}
+      {iLoveYouStage === 4 && <ILoveYouDisplay />}
     </main>
   )
 }
