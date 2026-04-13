@@ -95,39 +95,33 @@ Import them at the top of the component file that renders them.
 
 ---
 
-## UI/UX Skill (OpenCode)
+## Button Style Standard
+All buttons across the app follow this consistent design language:
 
-The `ui-ux-pro-max` skill is installed at `.opencode/skills/ui-ux-pro-max/`.
-Run it before any UI work.
+### Base Button Style (`hero-nav-btn`)
+- Minimal, text-only with icon + uppercase label pattern
+- Positioned absolutely on screen corners: 28px from edge, 24px from top
+- Font: 11px, 0.15em letter spacing, 500 weight
+- Color: `#e2a0b0` normal / dark mode `#9a6075`
+- No background, no borders, no rounded corners
+- Hover: color transitions to `#fb7185`, opacity 1.0
+- Transition: 0.25s ease
 
-```bash
-# Required first step for any UI session
-python skills/ui-ux-pro-max/scripts/search.py "timeline personal moments" --design-system --stack react -p "timeline"
+### Button Types
+1. **Navigation buttons** - icon + text label format
+2. **Tag chips** - minimal underline only, underlines animate width 0→100% on hover/active
+3. **Circular action buttons** - soft glassmorphism: backdrop-blur 12px, subtle rose border, hover scale -2px Y offset
+4. **Invisible UI buttons** - no background, just color transitions
 
-# Persist design system across sessions (creates design-system/MASTER.md)
-python skills/ui-ux-pro-max/scripts/search.py "timeline personal moments" --design-system --stack react --persist -p "timeline"
-
-# Other searches
-python skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <style|ux|typography|color>
-python skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack react
-```
-
-Requires Python 3. Windows: `winget install Python.Python.3.12`
-
-Non-negotiable UI rules enforced by the skill:
-- No emoji icons — SVG only (Heroicons / Lucide)
-- All clickable elements: `cursor-pointer`
-- Body text contrast ≥ `#475569` in light mode
-- Transitions: 150–300ms
-- Responsive at 375 / 768 / 1024 / 1440px
-- `prefers-reduced-motion` must be respected
-- All `<img>` must have `alt` text
+### Interaction Rules
+- All buttons use `outline: none` — no focus rings
+- Use `pointer-events: none` for decorative icons inside buttons
+- All actions have immediate feedback on hover (color/opacity change)
+- No drop shadows on text buttons
+- Motion respects `prefers-reduced-motion: reduce` disables all transitions
 
 ---
 
 ## Git
 
-- `dist/` and `node_modules` are gitignored — do not commit
-- `.opencode/` is committed (project-level AI config)
-- `__pycache__/`, `*.pyc` are gitignored
 - Remote: `https://github.com/MY-Final/timeline`
