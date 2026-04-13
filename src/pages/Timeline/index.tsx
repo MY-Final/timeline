@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Heart, ArrowLeft, ArrowUpDown, Tag } from 'lucide-react'
+import { Calendar, Heart, ArrowLeft, ArrowUpDown, Tag, ArrowUp } from 'lucide-react'
 import { getImagesByDate } from '@/lib/images.ts'
 import { getCardTransform } from '@/lib/gallery.ts'
 import { ImageLightbox } from '@/components/ui/common/ImageLightbox.tsx'
@@ -245,6 +245,7 @@ function FloatingDots() {
 export default function TimelinePage() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [ascending, setAscending] = useState(false)
+  const [showScrollToTop, setShowScrollToTop] = useState(false)
   const sortedEvents = ascending ? [...EVENTS] : [...EVENTS].reverse()
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   const isScrollingManually = useRef(false)
@@ -265,9 +266,19 @@ export default function TimelinePage() {
     }, 900)
   }
 
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+
   useEffect(() => {
     function handleScroll() {
       if (isScrollingManually.current) return
+
+      // Update scroll to top button visibility
+      setShowScrollToTop(window.scrollY > 300)
 
       if (window.scrollY < 80) {
         if (activeIndexRef.current !== 0) {
@@ -357,6 +368,16 @@ export default function TimelinePage() {
           MEMORIES / {String(activeIndex + 1).padStart(2, '0')} · {String(sortedEvents.length).padStart(2, '0')}
         </span>
       </div>
+
+      {showScrollToTop && (
+        <button
+          onClick={scrollToTop}
+          className="scroll-to-top-btn"
+          aria-label="回到顶部"
+        >
+          <ArrowUp size={20} strokeWidth={2} />
+        </button>
+      )}
     </div>
   )
 }
