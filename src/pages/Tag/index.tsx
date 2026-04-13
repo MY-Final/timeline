@@ -150,9 +150,7 @@ function TagChip({ tag, isSelected, onToggle }: TagChipProps) {
     <motion.button
       className={`tag-chip ${isSelected ? 'selected' : ''}`}
       onClick={() => onToggle(tag)}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      transition={{ duration: 0.25 }}
     >
       {tag}
     </motion.button>
@@ -227,7 +225,7 @@ export default function TagPage() {
 
       {/* Header */}
       <header className="tag-header">
-        <Link to="/timeline" className="tag-back" aria-label="返回时间线">
+        <Link to="/timeline" className="hero-nav-btn tag-back" aria-label="返回时间线">
           <ArrowLeft size={15} strokeWidth={1.8} aria-hidden="true" />
           <span>时间线</span>
         </Link>

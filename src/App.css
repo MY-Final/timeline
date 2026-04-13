@@ -83,6 +83,70 @@
   font-weight: 600;
 }
 
+/* ---------- Ghost nav button / link — shared utility ---------- */
+/* Use on any <button> or <a> that needs the ghost-underline style.
+   Add a position override class (.hero-back etc.) for absolute placement. */
+.hero-nav-btn {
+  position: absolute;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: rgba(233, 180, 180, 0.4);
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+  z-index: 100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: rgba(233, 180, 180, 0.6);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.hero-nav-btn:hover::after {
+  width: 100%;
+  transform: translateX(-50%) scaleX(1);
+}
+
+.hero-nav-btn:hover {
+  background: none !important;
+  color: rgba(233, 180, 180, 1);
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .hero-nav-btn {
+    color: rgba(154, 112, 117, 0.4);
+  }
+  .hero-nav-btn::after {
+    background: rgba(154, 112, 117, 0.6);
+  }
+  .hero-nav-btn:hover {
+    color: rgba(154, 112, 117, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-nav-btn { transition: none; transform: none !important; }
+}
+
 /* ---------- Timeline main ---------- */
 .timeline-main {
   max-width: 1000px;

@@ -305,25 +305,25 @@ export default function TimelinePage() {
       <FloatingDots />
 
       <header className="hero">
-        <Link to="/" className="hero-back" aria-label="返回主页">
-          <ArrowLeft size={15} strokeWidth={1.8} aria-hidden="true" />
-          <span>主页</span>
+        <Link to="/" className="hero-nav-btn hero-back" aria-label="返回主页">
+          <ArrowLeft size={18} strokeWidth={1.2} aria-hidden="true" />
+          <span>HOME</span>
         </Link>
         <button
-          className="hero-sort-toggle"
+          className="hero-nav-btn hero-sort-toggle"
           onClick={() => { setAscending(v => !v); setActiveIndex(0) }}
           aria-label={ascending ? '切换为倒序' : '切换为正序'}
         >
-          <ArrowUpDown size={13} strokeWidth={1.8} aria-hidden="true" />
-          <span>{ascending ? '正序' : '倒序'}</span>
+          <ArrowUpDown size={18} strokeWidth={1.2} aria-hidden="true" />
+          <span>{ascending ? 'ASC' : 'DESC'}</span>
         </button>
         <Link
           to="/tags"
-          className="hero-tag-link"
+          className="hero-nav-btn hero-tag-link"
           aria-label="按标签探索"
         >
-          <Tag size={13} strokeWidth={1.8} aria-hidden="true" />
-          <span>标签</span>
+          <Tag size={18} strokeWidth={1.2} aria-hidden="true" />
+          <span>TAGS</span>
         </Link>
         <SparkleIcon className="hero-sparkle" />
         <QuoteIcon className="hero-quote" />
