@@ -1,6 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, User, BookOpen } from 'lucide-react'
+import { 
+  useFloatingHearts, 
+  useSecretClick, 
+  useKonamiCode, 
+  useLongPress, 
+  isAnniversary 
+} from '@/lib/easter-eggs.ts'
 import './Home.css'
 
 // ─── 修改这里来设置恋爱开始日期 ───────────────────
@@ -11,8 +18,8 @@ const PERSON_A = '阳阳'
 const PERSON_B = '湘湘'
 
 // QQ 头像链接
-const avatarA: string | null = 'http://q.qlogo.cn/headimg_dl?dst_uin=3486159271&spec=640&img_type=jpg'
-const avatarB: string | null = 'http://q.qlogo.cn/headimg_dl?dst_uin=1789859045&spec=640&img_type=jpg'
+const avatarA: string | null = 'https://q1.qlogo.cn/g?b=qq&nk=3486159271&s=640'
+const avatarB: string | null = 'https://q1.qlogo.cn/g?b=qq&nk=1789859045&s=640'
 
 // ─────────────────────────────────────────────
 // Timer hook
@@ -75,11 +82,13 @@ function Avatar({ src, name }: { src: string | null; name: string }) {
 // ─────────────────────────────────────────────
 export default function HomePage() {
   const { days, hours, minutes, seconds } = useLoveTimer(LOVE_START_DATE)
-  const [hearts, setHearts] = useState<{ id: number, x: number, delay: number }[]>([])
-  const heartId = useRef(0)
-  const secretClicks = useRef(0)
-  const lastClick = useRef(0)
-  const [secretMode, setSecretMode] = useState(false)
+  
+  // Easter Eggs
+  const { hearts, spawn: spawnHearts } = useFloatingHearts(12)
+  const { active: secretMode, click: handleSecretClick } = useSecretClick(10, 400)
+  const konamiMode = useKonamiCode()
+  const { progress: holdProgress, active: loveMode, start: handleHeartHoldStart, end: handleHeartHoldEnd } = useLongPress(2000)
+  const anniversaryToday = isAnniversary(LOVE_START_DATE)
 
   const startDateStr = LOVE_START_DATE.toLocaleDateString('zh-CN', {
     year: 'numeric',
@@ -87,39 +96,8 @@ export default function HomePage() {
     day: 'numeric',
   })
 
-  function spawnHearts() {
-    const newHearts = Array.from({ length: 12 }, () => ({
-      id: heartId.current++,
-      x: Math.random() * 100,
-      delay: Math.random() * 0.5
-    }))
-    setHearts(prev => [...prev, ...newHearts])
-    setTimeout(() => {
-      setHearts(prev => prev.filter(h => !newHearts.find(n => n.id === h.id)))
-    }, 2500)
-  }
-
-  function handleSecretClick() {
-    const now = Date.now()
-    if (now - lastClick.current < 400) {
-      secretClicks.current++
-      if (secretClicks.current >= 10) {
-        setSecretMode(v => !v)
-        secretClicks.current = 0
-      }
-    } else {
-      secretClicks.current = 1
-    }
-    lastClick.current = now
-  }
-
-  // 特殊日期检测
-  const today = new Date()
-  const isAnniversary = today.getDate() === LOVE_START_DATE.getDate() && 
-                        today.getMonth() === LOVE_START_DATE.getMonth()
-
   return (
-    <main className={`home-shell ${secretMode ? 'secret-mode' : ''} ${isAnniversary ? 'anniversary' : ''}`}>
+    <main className={`home-shell ${secretMode ? 'secret-mode' : ''} ${anniversaryToday ? 'anniversary' : ''} ${konamiMode ? 'konami-mode' : ''} ${loveMode ? 'love-mode' : ''}`}>
       {/* Ambient orbs */}
       <div className="home-orb home-orb-1" aria-hidden="true" />
       <div className="home-orb home-orb-2" aria-hidden="true" />
@@ -141,10 +119,22 @@ export default function HomePage() {
         <div className="couple-section" role="img" aria-label="我们的头像">
           <Avatar src={avatarA} name={PERSON_A} />
 
-          <div className="heart-bridge" aria-hidden="true" onClick={(e) => { e.stopPropagation(); spawnHearts(); handleSecretClick(); }}>
+          <div className="heart-bridge" aria-hidden="true" 
+            onClick={(e) => { e.stopPropagation(); spawnHearts(); handleSecretClick(); }}
+            onMouseDown={handleHeartHoldStart}
+            onMouseUp={handleHeartHoldEnd}
+            onMouseLeave={handleHeartHoldEnd}
+            onTouchStart={handleHeartHoldStart}
+            onTouchEnd={handleHeartHoldEnd}
+          >
             <div className="bridge-line" />
             <Heart className="bridge-heart" size={30} fill="currentColor" strokeWidth={0} />
             <div className="bridge-line" />
+            
+            {holdProgress > 0 && (
+              <div className="heart-hold-progress" style={{ width: `${holdProgress}%` }} />
+            )}
+            
             {hearts.map(h => (
               <span 
                 key={h.id} 

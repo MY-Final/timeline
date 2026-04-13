@@ -4,6 +4,7 @@ import { Calendar, Heart, ArrowLeft, ArrowUpDown, Tag, ArrowUp } from 'lucide-re
 import { getImagesByDate } from '@/lib/images.ts'
 import { getCardTransform } from '@/lib/gallery.ts'
 import { ImageLightbox } from '@/components/ui/common/ImageLightbox.tsx'
+import { useFloatingHearts, useSecretClick, useMouseTrail } from '@/lib/easter-eggs.ts'
 import eventsJson from '@/data/events.json'
 import './Timeline.css'
 
@@ -136,16 +137,7 @@ interface EventCardProps {
 function EventCard({ event, index, isActive, cardRef, onActivate }: EventCardProps) {
   const isEven = index % 2 === 0
   const { ref: revealRef, revealed } = useScrollReveal(0.12)
-  const [floatingHearts, setFloatingHearts] = useState<number[]>([])
-  const heartIdRef = useRef(0)
-
-  function spawnHeart() {
-    const id = heartIdRef.current++
-    setFloatingHearts(prev => [...prev, id])
-    setTimeout(() => {
-      setFloatingHearts(prev => prev.filter(h => h !== id))
-    }, 1500)
-  }
+  const { hearts: floatingHearts, spawn: spawnHeart } = useFloatingHearts(6)
 
   return (
     <div
@@ -164,10 +156,10 @@ function EventCard({ event, index, isActive, cardRef, onActivate }: EventCardPro
       <div className="timeline-card-connector" aria-hidden="true">
         <div className={`connector-heart ${isActive ? 'active' : ''}`} onClick={(e) => { e.stopPropagation(); spawnHeart() }}>
           <Heart size={16} fill={isActive ? '#fb7185' : 'transparent'} strokeWidth={1.5} />
-          {floatingHearts.map(id => (
-            <span key={id} className="floating-heart" style={{
-              left: `${Math.random() * 40 - 20}px`,
-              animationDelay: `${Math.random() * 0.2}s`
+          {floatingHearts.map(h => (
+            <span key={h.id} className="floating-heart" style={{
+              left: `${h.x - 50}px`,
+              animationDelay: `${h.delay}s`
             }}>❤️</span>
           ))}
         </div>
@@ -262,9 +254,10 @@ export default function TimelinePage() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [ascending, setAscending] = useState(false)
   const [showScrollToTop, setShowScrollToTop] = useState(false)
-  const [secretMode, setSecretMode] = useState(false)
-  const secretClicks = useRef(0)
-  const lastClickTime = useRef(0)
+  const { active: secretMode, click: secretClick } = useSecretClick(7, 500)
+
+  // 鼠标轨迹效果
+  useMouseTrail()
   
   const sortedEvents = ascending ? [...EVENTS] : [...EVENTS].reverse()
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -390,19 +383,7 @@ export default function TimelinePage() {
         <QuoteIcon className="hero-quote" />
         <p 
           className="hero-subtitle" 
-          onClick={() => {
-            const now = Date.now()
-            if (now - lastClickTime.current < 500) {
-              secretClicks.current++
-              if (secretClicks.current >= 7) {
-                setSecretMode(v => !v)
-                secretClicks.current = 0
-              }
-            } else {
-              secretClicks.current = 1
-            }
-            lastClickTime.current = now
-          }}
+          onClick={secretClick}
         >
           {secretMode ? '💕 LOVE MODE ACTIVATED 💕' : 'THE JOURNEY OF US'}
         </p>
