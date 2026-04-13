@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Heart, User, BookOpen } from 'lucide-react'
 import './Home.css'
@@ -75,6 +75,11 @@ function Avatar({ src, name }: { src: string | null; name: string }) {
 // ─────────────────────────────────────────────
 export default function HomePage() {
   const { days, hours, minutes, seconds } = useLoveTimer(LOVE_START_DATE)
+  const [hearts, setHearts] = useState<{ id: number, x: number, delay: number }[]>([])
+  const heartId = useRef(0)
+  const secretClicks = useRef(0)
+  const lastClick = useRef(0)
+  const [secretMode, setSecretMode] = useState(false)
 
   const startDateStr = LOVE_START_DATE.toLocaleDateString('zh-CN', {
     year: 'numeric',
@@ -82,8 +87,39 @@ export default function HomePage() {
     day: 'numeric',
   })
 
+  function spawnHearts() {
+    const newHearts = Array.from({ length: 12 }, () => ({
+      id: heartId.current++,
+      x: Math.random() * 100,
+      delay: Math.random() * 0.5
+    }))
+    setHearts(prev => [...prev, ...newHearts])
+    setTimeout(() => {
+      setHearts(prev => prev.filter(h => !newHearts.find(n => n.id === h.id)))
+    }, 2500)
+  }
+
+  function handleSecretClick() {
+    const now = Date.now()
+    if (now - lastClick.current < 400) {
+      secretClicks.current++
+      if (secretClicks.current >= 10) {
+        setSecretMode(v => !v)
+        secretClicks.current = 0
+      }
+    } else {
+      secretClicks.current = 1
+    }
+    lastClick.current = now
+  }
+
+  // 特殊日期检测
+  const today = new Date()
+  const isAnniversary = today.getDate() === LOVE_START_DATE.getDate() && 
+                        today.getMonth() === LOVE_START_DATE.getMonth()
+
   return (
-    <main className="home-shell">
+    <main className={`home-shell ${secretMode ? 'secret-mode' : ''} ${isAnniversary ? 'anniversary' : ''}`}>
       {/* Ambient orbs */}
       <div className="home-orb home-orb-1" aria-hidden="true" />
       <div className="home-orb home-orb-2" aria-hidden="true" />
@@ -105,10 +141,17 @@ export default function HomePage() {
         <div className="couple-section" role="img" aria-label="我们的头像">
           <Avatar src={avatarA} name={PERSON_A} />
 
-          <div className="heart-bridge" aria-hidden="true">
+          <div className="heart-bridge" aria-hidden="true" onClick={(e) => { e.stopPropagation(); spawnHearts(); handleSecretClick(); }}>
             <div className="bridge-line" />
             <Heart className="bridge-heart" size={30} fill="currentColor" strokeWidth={0} />
             <div className="bridge-line" />
+            {hearts.map(h => (
+              <span 
+                key={h.id} 
+                className="floating-heart-fullscreen" 
+                style={{ left: `${h.x}%`, animationDelay: `${h.delay}s` }}
+              >❤️</span>
+            ))}
           </div>
 
           <Avatar src={avatarB} name={PERSON_B} />
