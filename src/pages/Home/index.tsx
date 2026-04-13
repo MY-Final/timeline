@@ -105,16 +105,7 @@ export default function HomePage() {
       <div className="home-orb home-orb-2" aria-hidden="true" />
       <div className="home-orb home-orb-3" aria-hidden="true" />
 
-      {/* Konami input indicator */}
-      {konamiProgress > 0 && (
-        <div className="konami-indicator">
-          {konamiSequence.map((key, i) => (
-            <span key={key} className={`konami-key ${i < konamiProgress ? 'pressed' : ''}`}>
-              {key.replace('Arrow', '')}
-            </span>
-          ))}
-        </div>
-      )}
+
 
       {/* I Love You input indicator */}
       {inputProgress > 0 && (
@@ -212,6 +203,16 @@ export default function HomePage() {
 
       {/* Bottom tagline */}
       <div className="home-bottom">
+        {/* Konami input indicator */}
+        {konamiProgress > 0 && (
+          <div className="konami-indicator">
+            {konamiSequence.map((key, i) => (
+              <span key={i} className={`konami-key ${i < konamiProgress ? 'pressed' : ''}`}>
+                {key.replace('Arrow', '')}
+              </span>
+            ))}
+          </div>
+        )}
         <div className="bottom-tagline">
           <p className="bottom-tagline-text">每一天都值得被记住</p>
           <div className="bottom-tagline-line" />
