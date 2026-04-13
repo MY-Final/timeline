@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Heart, ArrowLeft } from 'lucide-react'
+import { Calendar, Heart, ArrowLeft, ArrowUpDown } from 'lucide-react'
 import { getImagesByDate } from '@/lib/images.ts'
 import { getCardTransform } from '@/lib/gallery.ts'
 import { ImageLightbox } from '@/components/ui/common/ImageLightbox.tsx'
@@ -244,6 +244,8 @@ function FloatingDots() {
 // ─────────────────────────────────────────────
 export default function TimelinePage() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [ascending, setAscending] = useState(false)
+  const sortedEvents = ascending ? [...EVENTS] : [...EVENTS].reverse()
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   const isScrollingManually = useRef(false)
   const activeIndexRef = useRef(0)
@@ -307,6 +309,14 @@ export default function TimelinePage() {
           <ArrowLeft size={15} strokeWidth={1.8} aria-hidden="true" />
           <span>主页</span>
         </Link>
+        <button
+          className="hero-sort-toggle"
+          onClick={() => { setAscending(v => !v); setActiveIndex(0) }}
+          aria-label={ascending ? '切换为倒序' : '切换为正序'}
+        >
+          <ArrowUpDown size={13} strokeWidth={1.8} aria-hidden="true" />
+          <span>{ascending ? '正序' : '倒序'}</span>
+        </button>
         <SparkleIcon className="hero-sparkle" />
         <QuoteIcon className="hero-quote" />
         <p className="hero-subtitle">THE JOURNEY OF US</p>
@@ -319,7 +329,7 @@ export default function TimelinePage() {
       <main className="timeline-main">
         <div className="timeline-line" aria-hidden="true" />
         <div className="timeline-events">
-          {EVENTS.map((event, index) => (
+          {sortedEvents.map((event, index) => (
             <EventCard
               key={event.id}
               event={event}
@@ -332,11 +342,11 @@ export default function TimelinePage() {
         </div>
       </main>
 
-      <SideNav events={EVENTS} activeIndex={activeIndex} onNavigate={scrollToSection} />
+      <SideNav events={sortedEvents} activeIndex={activeIndex} onNavigate={scrollToSection} />
 
       <div className="memory-counter">
         <span className="memory-counter-text">
-          MEMORIES / {String(activeIndex + 1).padStart(2, '0')}
+          MEMORIES / {String(activeIndex + 1).padStart(2, '0')} · {String(sortedEvents.length).padStart(2, '0')}
         </span>
       </div>
     </div>
