@@ -60,17 +60,17 @@ function PhotoCarousel({ images }: PhotoCarouselProps) {
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % count)
-    }, 3000) // Auto advance every 3 seconds
+    }, 3000)
 
     return () => clearInterval(interval)
   }, [count, isHovered])
 
   function nextImage() {
-    setCurrentIndex((currentIndex + 1) % count)
+    setCurrentIndex((prev) => (prev + 1) % count)
   }
 
   function prevImage() {
-    setCurrentIndex((currentIndex - 1 + count) % count)
+    setCurrentIndex((prev) => (prev - 1 + count) % count)
   }
 
   function openLightbox() {
@@ -87,11 +87,16 @@ function PhotoCarousel({ images }: PhotoCarouselProps) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <img
-          src={images[currentIndex]}
-          alt={`照片 ${currentIndex + 1}`}
-          className="tag-carousel-image"
-        />
+        {/* 所有图片叠放，opacity 切换 — 避免 src 切换导致的 decode 卡顿 */}
+        {images.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt={`照片 ${i + 1}`}
+            className={`tag-carousel-image${i === currentIndex ? ' active' : ''}`}
+            draggable={false}
+          />
+        ))}
         {count > 1 && (
           <>
             <button
@@ -150,7 +155,9 @@ function TagChip({ tag, isSelected, onToggle }: TagChipProps) {
     <motion.button
       className={`tag-chip ${isSelected ? 'selected' : ''}`}
       onClick={() => onToggle(tag)}
-      transition={{ duration: 0.25 }}
+      // 移动端：触摸结束后主动 blur，防止 :hover/:focus 态残留
+      onTouchEnd={(e) => { e.currentTarget.blur() }}
+      transition={{ duration: 0.2 }}
     >
       {tag}
     </motion.button>
