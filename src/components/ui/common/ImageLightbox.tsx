@@ -99,7 +99,7 @@ export function ImageLightbox({ images, index, onClose, onPrev, onNext, onJump }
               aria-label={`切换到第 ${i + 1} 张`}
               aria-current={i === index}
             >
-              <img src={src} alt={`缩略图 ${i + 1}`} draggable={false} />
+              <img src={src} alt={`缩略图 ${i + 1}`} draggable={false} loading="lazy" />
             </button>
           ))}
         </div>

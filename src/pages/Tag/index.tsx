@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, memo } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -94,7 +94,9 @@ function PhotoCarousel({ images }: PhotoCarouselProps) {
             src={src}
             alt={`照片 ${i + 1}`}
             className={`tag-carousel-image${i === currentIndex ? ' active' : ''}`}
+            loading="lazy"
             draggable={false}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).classList.add('img-error') }}
           />
         ))}
         {count > 1 && (
@@ -150,18 +152,34 @@ interface TagChipProps {
   onToggle: (tag: string) => void
 }
 
-function TagChip({ tag, isSelected, onToggle }: TagChipProps) {
+const TagChip = memo(function TagChip({ tag, isSelected, onToggle }: TagChipProps) {
   return (
     <motion.button
       className={`tag-chip ${isSelected ? 'selected' : ''}`}
       onClick={() => onToggle(tag)}
       // 移动端：触摸结束后主动 blur，防止 :hover/:focus 态残留
       onTouchEnd={(e) => { e.currentTarget.blur() }}
-      transition={{ duration: 0.2 }}
+      whileTap={{ scale: 0.94 }}
+      transition={{ duration: 0.15 }}
     >
       {tag}
     </motion.button>
   )
+})
+
+// ─────────────────────────────────────────────
+// framer-motion variants
+// ─────────────────────────────────────────────
+const cardContainerVariants = {
+  visible: {
+    transition: { staggerChildren: 0.07 }
+  }
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
+  exit:    { opacity: 0, y: -20, transition: { duration: 0.3 } }
 }
 
 // ─────────────────────────────────────────────
@@ -171,15 +189,15 @@ interface EventCardProps {
   event: TimelineEventData
 }
 
-function EventCard({ event }: EventCardProps) {
+const EventCard = memo(function EventCard({ event }: EventCardProps) {
   return (
     <motion.div
       className="tag-event-card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ scale: 1.02 }}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
     >
       <div className="tag-event-photo">
         <PhotoCarousel images={event.images} />
@@ -206,7 +224,7 @@ function EventCard({ event }: EventCardProps) {
       </div>
     </motion.div>
   )
-}
+})
 
 // ─────────────────────────────────────────────
 // Tag Page
@@ -222,9 +240,12 @@ export default function TagPage() {
     )
   }
 
-  const filteredEvents = selectedTags.length === 0
-    ? EVENTS
-    : EVENTS.filter(event => selectedTags.some(tag => event.tags.includes(tag)))
+  const filteredEvents = useMemo(
+    () => selectedTags.length === 0
+      ? EVENTS
+      : EVENTS.filter(event => selectedTags.some(tag => event.tags.includes(tag))),
+    [selectedTags]
+  )
 
   return (
     <div className="tag-shell">
@@ -258,6 +279,9 @@ export default function TagPage() {
           <motion.div
             className="tag-grid"
             layout
+            variants={cardContainerVariants}
+            initial="hidden"
+            animate="visible"
             transition={{ duration: 0.3 }}
           >
             {filteredEvents.map(event => (

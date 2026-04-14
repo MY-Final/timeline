@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, memo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Heart, ArrowLeft, ArrowUpDown, Tag, ArrowUp } from 'lucide-react'
 import { getImagesByDate } from '@/lib/images.ts'
@@ -47,6 +47,7 @@ interface TimelineEventData {
   tags: string[]
 }
 
+// Module-level constant — computed once at import time, never changes
 const EVENTS: TimelineEventData[] = eventsJson.map((e) => ({
   ...e,
   images: getImagesByDate(e.date),
@@ -79,14 +80,14 @@ interface PhotoGalleryProps {
   isActive: boolean
 }
 
-function PhotoGallery({ images, isActive }: PhotoGalleryProps) {
+const PhotoGallery = memo(function PhotoGallery({ images, isActive }: PhotoGalleryProps) {
   const [hovered, setHovered] = useState<number | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const count = images.length
 
-  function openLightbox(i: number) {
+  const openLightbox = useCallback((i: number) => {
     setLightboxIndex(i)
-  }
+  }, [])
 
   return (
     <>
@@ -103,7 +104,15 @@ function PhotoGallery({ images, isActive }: PhotoGalleryProps) {
             onMouseLeave={() => setHovered(null)}
             onClick={(e) => { e.stopPropagation(); if (isActive) openLightbox(i) }}
           >
-            <img src={src} alt={`记忆照片 ${i + 1}`} className="fan-card-image" />
+            <img
+              src={src}
+              alt={`记忆照片 ${i + 1}`}
+              className="fan-card-image"
+              loading="lazy"
+              draggable={false}
+              onLoad={(e) => (e.currentTarget as HTMLImageElement).classList.add('loaded')}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).classList.add('img-error') }}
+            />
             {count > 1 && <div className="fan-index">{i + 1}</div>}
           </div>
         ))}
@@ -121,7 +130,7 @@ function PhotoGallery({ images, isActive }: PhotoGalleryProps) {
       )}
     </>
   )
-}
+})
 
 // ─────────────────────────────────────────────
 // Timeline event card
@@ -134,7 +143,7 @@ interface EventCardProps {
   onActivate: () => void
 }
 
-function EventCard({ event, index, isActive, cardRef, onActivate }: EventCardProps) {
+const EventCard = memo(function EventCard({ event, index, isActive, cardRef, onActivate }: EventCardProps) {
   const isEven = index % 2 === 0
   const { ref: revealRef, revealed } = useScrollReveal(0.12)
   const { hearts: floatingHearts, spawn: spawnHeart } = useFloatingHearts(6)
@@ -181,15 +190,19 @@ function EventCard({ event, index, isActive, cardRef, onActivate }: EventCardPro
 
         {isActive && (
           <div className="event-tags">
-            {event.tags.map((tag) => (
-              <span key={tag} className="event-tag">{tag}</span>
+            {event.tags.map((tag, i) => (
+              <span
+                key={tag}
+                className="event-tag"
+                style={{ animationDelay: `${i * 0.07}s` }}
+              >{tag}</span>
             ))}
           </div>
         )}
       </div>
     </div>
   )
-}
+})
 
 // ─────────────────────────────────────────────
 // Side navigation dots
@@ -200,7 +213,7 @@ interface SideNavProps {
   onNavigate: (i: number) => void
 }
 
-function SideNav({ events, activeIndex, onNavigate }: SideNavProps) {
+const SideNav = memo(function SideNav({ events, activeIndex, onNavigate }: SideNavProps) {
   const navRef = useRef<HTMLElement | null>(null)
   const activeButtonRef = useRef<HTMLButtonElement | null>(null)
 
@@ -230,7 +243,7 @@ function SideNav({ events, activeIndex, onNavigate }: SideNavProps) {
       ))}
     </nav>
   )
-}
+})
 
 // ─────────────────────────────────────────────
 // Decorative floating dots
@@ -259,7 +272,10 @@ export default function TimelinePage() {
   // 鼠标轨迹效果
   useMouseTrail()
   
-  const sortedEvents = ascending ? [...EVENTS] : [...EVENTS].reverse()
+  const sortedEvents = useMemo(
+    () => ascending ? [...EVENTS] : [...EVENTS].reverse(),
+    [ascending]
+  )
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   const isScrollingManually = useRef(false)
   const activeIndexRef = useRef(0)

@@ -832,6 +832,7 @@
       #9f1239 90%,
       transparent 100%
     );
+    filter: drop-shadow(0 0 6px rgba(159, 18, 57, 0.5));
   }
 
   /* Mobile bottom nav in dark mode */
@@ -945,8 +946,9 @@
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translateZ(0);
   animation: trail-fade 0.8s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes trail-fade {
@@ -997,4 +999,50 @@
     animation: none !important;
     display: none;
   }
+}
+
+/* ──────────────────────────────────────────────
+   Image fade-in on load
+   ────────────────────────────────────────────── */
+.fan-card-image {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.fan-card-image.loaded {
+  opacity: 1;
+}
+
+/* Error placeholder */
+.fan-card-image.img-error {
+  opacity: 1;
+  background: #fce7e7;
+}
+
+/* ──────────────────────────────────────────────
+   connector-heart ripple on click
+   ────────────────────────────────────────────── */
+.connector-heart {
+  position: relative;
+  overflow: visible;
+}
+
+.connector-heart::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid #fb7185;
+  opacity: 0;
+  transform: scale(1);
+  pointer-events: none;
+}
+
+.connector-heart.active::after {
+  animation: heart-ripple 0.6s ease-out forwards;
+}
+
+@keyframes heart-ripple {
+  0%   { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(2.2); }
 }

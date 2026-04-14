@@ -395,3 +395,12 @@
   .tag-event-content { padding: 16px; }
   .tag-event-title { font-size: 16px; }
 }
+
+/* ──────────────────────────────────────────────
+   Image error placeholder
+   ────────────────────────────────────────────── */
+.tag-carousel-image.img-error {
+  opacity: 1 !important;
+  background: #fce7e7;
+  object-fit: none;
+}

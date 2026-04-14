@@ -136,21 +136,37 @@ export function isAnniversary(date: Date): boolean {
 }
 
 // ─────────────────────────────────────────────
-// 鼠标轨迹效果
+// 鼠标轨迹效果（rAF 节流，每帧最多创建一个 dot）
 // ─────────────────────────────────────────────
 export function useMouseTrail() {
   useEffect(() => {
-    function handleMouseMove(e: MouseEvent) {
+    let rafId: number | null = null
+    let pendingX = 0
+    let pendingY = 0
+
+    function spawnDot() {
       const dot = document.createElement('div')
       dot.className = 'mouse-trail'
-      dot.style.left = `${e.clientX}px`
-      dot.style.top = `${e.clientY}px`
+      dot.style.left = `${pendingX}px`
+      dot.style.top = `${pendingY}px`
       document.body.appendChild(dot)
       setTimeout(() => dot.remove(), 800)
+      rafId = null
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+      pendingX = e.clientX
+      pendingY = e.clientY
+      if (rafId === null) {
+        rafId = requestAnimationFrame(spawnDot)
+      }
     }
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      if (rafId !== null) cancelAnimationFrame(rafId)
+    }
   }, [])
 }
 
