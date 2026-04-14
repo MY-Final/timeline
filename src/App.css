@@ -95,56 +95,80 @@
   padding: 4px 8px;
   background: transparent;
   border: none;
-  color: rgba(233, 180, 180, 0.4);
-  font-size: 12px;
-  letter-spacing: 2px;
-  font-weight: 400;
+  color: #e2a0b0;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.3s ease;
+  outline: none;
+  transition: color 0.25s ease, transform 0.25s ease;
   z-index: 100;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .hero-nav-btn::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 1px;
-  background: rgba(233, 180, 180, 0.6);
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  transition: transform 0.3s ease;
-}
-
-.hero-nav-btn:hover::after {
+  left: 0;
   width: 100%;
-  transform: translateX(-50%) scaleX(1);
+  height: 1px;
+  background: #e2a0b0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
 }
 
-.hero-nav-btn:hover {
+.hero-nav-btn:hover::after,
+.hero-nav-btn:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.hero-nav-btn:hover,
+.hero-nav-btn:focus-visible {
   background: none !important;
-  color: rgba(233, 180, 180, 1);
+  color: #fb7185;
   transform: translateY(-2px);
+}
+
+.hero-nav-btn:focus {
+  outline: none;
+}
+
+@media (hover: none) {
+  .hero-nav-btn:hover {
+    color: #e2a0b0;
+    transform: none;
+  }
+  .hero-nav-btn:hover::after {
+    transform: scaleX(0);
+  }
+  .hero-nav-btn:active {
+    color: #fb7185;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   .hero-nav-btn {
-    color: rgba(154, 112, 117, 0.4);
+    color: #9a6075;
   }
   .hero-nav-btn::after {
-    background: rgba(154, 112, 117, 0.6);
+    background: #9a6075;
   }
-  .hero-nav-btn:hover {
-    color: rgba(154, 112, 117, 1);
+  .hero-nav-btn:hover,
+  .hero-nav-btn:focus-visible {
+    color: #fb7185;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-nav-btn { transition: none; transform: none !important; }
+  .hero-nav-btn::after { transition: none; }
 }
 
 /* ---------- Timeline main ---------- */
