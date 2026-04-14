@@ -711,6 +711,69 @@
   }
 }
 
+/* ---------- Small tablet / large phone (481–767px) ---------- */
+@media (max-width: 767px) {
+  .timeline-main { padding: 48px 16px 160px; }
+
+  .timeline-events { gap: 72px; }
+
+  /* Single-column card layout */
+  .timeline-card {
+    grid-template-columns: 1fr;
+  }
+
+  /* Fan gallery smaller */
+  .fan-gallery { width: 280px; height: 296px; }
+  .fan-card    { width: 176px; height: 234px; }
+
+  .event-title  { font-size: 24px; }
+
+  /* Side nav stays at bottom; shrink padding */
+  .side-nav { padding: 8px 14px; gap: 8px; }
+
+  /* Hero spacing */
+  .hero { padding: 48px 16px 0; }
+  .hero-line { height: 56px; }
+}
+
+/* ---------- Mobile (≤480px) ---------- */
+@media (max-width: 480px) {
+  .timeline-main { padding: 40px 12px 140px; }
+
+  .timeline-events { gap: 56px; }
+
+  .fan-gallery { width: 240px; height: 260px; }
+  .fan-card    { width: 154px; height: 205px; }
+
+  .event-title { font-size: 22px; margin-bottom: 14px; }
+
+  .event-description p { font-size: 13px; line-height: 1.8; }
+
+  .timeline-card-content { padding: 0 12px 24px; }
+
+  .side-nav { padding: 7px 12px; gap: 6px; max-width: calc(100vw - 32px); }
+  .side-nav-dot { width: 6px; height: 6px; }
+
+  .hero { padding: 40px 12px 0; }
+  .hero-line { height: 44px; }
+  .scroll-ring { width: 22px; height: 22px; }
+
+  /* Scroll-to-top button closer to edge on small screens */
+  .scroll-to-top-btn { bottom: 72px; right: 16px; width: 40px; height: 40px; }
+}
+
+/* ---------- Tiny screens (≤360px) ---------- */
+@media (max-width: 360px) {
+  .fan-gallery { width: 210px; height: 230px; }
+  .fan-card    { width: 136px; height: 181px; }
+
+  .event-title  { font-size: 20px; }
+
+  .timeline-card-content { padding: 0 8px 20px; }
+
+  .side-nav { gap: 4px; padding: 6px 10px; }
+}
+
 /* ---------- Dark mode ---------- */
 @media (prefers-color-scheme: dark) {
   .app-shell {

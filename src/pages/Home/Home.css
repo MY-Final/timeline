@@ -465,12 +465,47 @@
   .avatar-name-label { font-size: 13px; }
 }
 
-/* ---------- Mobile ---------- */
+/* ---------- Small tablet / large phone (481–767px) ---------- */
+@media (max-width: 767px) {
+  .home-center { padding: 0 20px; max-width: 560px; }
+  .couple-section { margin-bottom: 24px; max-width: 400px; }
+  .hms-row { margin-bottom: 20px; gap: 2px; }
+  .hms-unit { min-width: 56px; }
+  .home-cta { padding: 12px 28px; font-size: 12px; }
+  .date-badge-text { font-size: 10px; letter-spacing: 0.3em; }
+  .home-orb-1 { width: 240px; height: 240px; }
+  .home-orb-2 { width: 180px; height: 180px; }
+  .home-orb-3 { display: none; }
+}
+
+/* ---------- Mobile (≤480px) ---------- */
 @media (max-width: 480px) {
+  .home-center { padding: 0 16px; }
   .days-num    { font-size: 80px; letter-spacing: -4px; }
   .hms-value   { font-size: 26px; }
-  .avatar-frame { width: 86px; height: 86px; }
-  .couple-section { max-width: 340px; }
-  .bridge-line { width: 32px; }
-  .heart-bridge { padding: 0 12px; }
+  .hms-unit    { min-width: 50px; }
+  .hms-label   { font-size: 9px; }
+  .avatar-frame { width: 82px; height: 82px; }
+  .couple-section { max-width: 320px; }
+  .bridge-line { width: 28px; }
+  .heart-bridge { padding: 0 10px; }
+  .home-cta { padding: 11px 24px; font-size: 12px; gap: 8px; }
+  .home-bottom { padding-top: 8px; gap: 12px; }
+  .bottom-tagline-line { height: 36px; }
+  .date-badge-line { height: 44px; }
+}
+
+/* ---------- Tiny screens (≤360px) ---------- */
+@media (max-width: 360px) {
+  .home-center { padding: 0 12px; }
+  .days-num    { font-size: 68px; letter-spacing: -3px; }
+  .hms-value   { font-size: 22px; }
+  .hms-sep     { font-size: 18px; }
+  .hms-unit    { min-width: 44px; }
+  .avatar-frame { width: 72px; height: 72px; }
+  .couple-section { max-width: 290px; gap: 0; }
+  .bridge-line { width: 20px; }
+  .heart-bridge { padding: 0 6px; gap: 4px; }
+  .avatar-name-label { font-size: 12px; }
+  .home-cta { padding: 10px 20px; font-size: 11px; }
 }

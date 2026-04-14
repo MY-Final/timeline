@@ -264,6 +264,10 @@ export default function TimelinePage() {
   const isScrollingManually = useRef(false)
   const activeIndexRef = useRef(0)
 
+  // 纪念日特效
+  const today = new Date().toISOString().slice(0, 10)
+  const isSpecialDay = EVENTS.some(e => e.date === today)
+
   function scrollToSection(index: number) {
     const el = sectionRefs.current[index]
     if (!el) return
@@ -285,36 +289,6 @@ export default function TimelinePage() {
       behavior: 'smooth',
     })
   }
-
-  // 纪念日特效
-  const today = new Date().toISOString().slice(0, 10)
-  const isSpecialDay = EVENTS.some(e => e.date === today)
-
-  // 鼠标轨迹效果
-  const trailDots = useRef<{ x: number, y: number, id: number }[]>([])
-  const trailId = useRef(0)
-  
-  useEffect(() => {
-    function handleMouseMove(e: MouseEvent) {
-      const id = trailId.current++
-      trailDots.current.push({ x: e.clientX, y: e.clientY, id })
-      
-      const dot = document.createElement('div')
-      dot.className = 'mouse-trail'
-      dot.style.left = `${e.clientX}px`
-      dot.style.top = `${e.clientY}px`
-      document.body.appendChild(dot)
-      
-      setTimeout(() => dot.remove(), 800)
-      
-      if (trailDots.current.length > 20) {
-        trailDots.current.shift()
-      }
-    }
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
 
   useEffect(() => {
     function handleScroll() {
