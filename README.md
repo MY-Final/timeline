@@ -1,124 +1,210 @@
-# ✨ Timeline · 我们的故事
+# Timeline · 我们的故事
 
-<p align="center">
-  <sub>记录两个人之间每一个值得铭记的瞬间 ❤️</sub>
-</p>
+一个记录两个人之间重要时刻的前端时间轴项目。
 
-<p align="center">
-  <a href="https://timeline.120403.xyz">
-    <img src="https://img.shields.io/badge/🚀_在线访问-timeline.120403.xyz-ff6b9d?style=for-the-badge" alt="在线访问"/>
-  </a>
-</p>
+- 在线地址: `https://timeline.120403.xyz`
+- 当前形态: 纯前端静态站点，无后端
+- 数据来源: 本地 `JSON + 图片目录`
+- 目标: 先把内容体验做好，同时保留后续接入后端的空间
 
 <p align="center">
   <img src="https://count.getloli.com/@MY-Final_timeline?name=timeline&theme=minecraft&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" alt="访问计数"/>
 </p>
 
----
+## 功能概览
 
-## 🛠 技术栈
+- 首页恋爱计时器，展示在一起的天数、小时、分钟、秒
+- 时间轴页面，按事件卡片展示故事节点
+- 标签页，支持按标签筛选回忆
+- 图片自动按日期归档并加载，无需逐张手写 `import`
+- 图片灯箱预览、悬浮动画、滚动定位等交互
+- 内置一些彩蛋交互，增加浏览趣味性
 
-| 技术 | 版本 | 说明 |
-|---|---|---|
-| ⚛️ React | 19 | 前端框架 |
-| 📘 TypeScript | 5 | 类型安全 |
-| ⚡ Vite | 6 | 构建工具 |
-| 🎨 Tailwind CSS | v4 | 样式框架 |
-| 🧩 shadcn/ui | latest | base-nova 主题 |
-| 🛣 react-router-dom | latest | HashRouter 路由 |
+## 技术栈
 
----
+| 技术 | 说明 |
+| --- | --- |
+| React 19 | UI 框架 |
+| TypeScript 6 | 严格类型检查 |
+| Vite 8 | 开发与构建 |
+| React Router 7 | 页面路由 |
+| Tailwind CSS v4 | 样式工具 |
+| shadcn/ui | 基础 UI 组件 |
+| Framer Motion | 动效 |
+| Lucide React | 图标库 |
 
-## 💻 本地开发
+## 本地开发
 
 ```bash
-# 📦 安装依赖
 npm install
-
-# 🚀 启动开发服务器（热更新）
 npm run dev
-
-# ✅ 类型检查 + 生产构建
-npm run build
-
-# 👀 预览构建产物
-npm run preview
-
-# 🔍 ESLint 代码检查
-npm run lint
 ```
 
----
+常用命令：
 
-## 🚀 部署到 GitHub Pages
-
-### 部署方式
-
-| 方式 | 命令 | 说明 |
-|---|---|---|
-| 🤖 **自动部署** | `git push origin master` | 推送后 GitHub Actions 自动构建部署 |
-| 🔧 **手动部署** | `npm run deploy` | 本地构建后直接推送到 `gh-pages` 分支 |
-
-> ✨ 推送到 master 分支会自动触发工作流，无需手动操作
-
-### 配置说明
-
-1. ✅ `vite.config.ts` 已配置 `base: '/timeline/'`
-2. ✅ 使用 `HashRouter` 避免静态站点 404 问题
-3. ✅ 已内置 `.github/workflows/deploy.yml` 工作流
-
----
-
-## 📁 项目结构
-
-```
-src/
-├── main.tsx              # ✅ 应用入口
-├── App.tsx               # 🚪 路由根组件
-├── index.css             # 🎨 全局样式 + CSS 变量
-├── assets/
-│   └── images/YYYY-MM-DD/ # 📷 按日期存放照片
-├── pages/
-│   ├── Home/             # 🏠 首页：恋爱计时器 + 双头像
-│   ├── Timeline/         # 📅 时间轴页：记忆卡片流
-│   └── Tag/              # 🏷️ 标签页：按标签筛选记忆
-├── data/
-│   └── events.json       # 📝 时间轴事件数据
-├── lib/
-│   └── images.ts         # 🔍 按日期自动加载图片
-└── router/
-    └── index.tsx         # 🛣️ 路由配置
+```bash
+npm run dev      # 启动 Vite 开发服务器
+npm run build    # TypeScript 检查 + 生产构建
+npm run lint     # ESLint
+npm run preview  # 预览构建产物
 ```
 
----
+说明：
 
-## ✏️ 自定义内容
+- 项目当前没有测试框架
+- `npm run build` 会受到 TypeScript 严格规则约束，类型问题会直接失败
 
-### 基础配置
+## 页面结构
 
-编辑 `src/pages/Home/index.tsx` 顶部：
+当前有 3 个页面：
+
+- `/`：首页，展示恋爱计时器、双方头像和入口按钮
+- `/timeline`：时间轴页，浏览所有事件卡片
+- `/tags`：标签页，按标签筛选事件
+
+路由入口位于 `src/router/index.tsx`。
+
+## 如何维护内容
+
+### 1. 修改首页人物信息
+
+编辑 `src/pages/Home/index.tsx` 顶部常量：
 
 ```ts
-// 💌 恋爱开始日期
 const LOVE_START_DATE = new Date('2026-03-08T18:35:00')
+const PERSON_A = '阳阳'
+const PERSON_B = '湘湘'
 
-// 👤 两人的名字
-const PERSON_A = '你'
-const PERSON_B = 'Ta'
-
-// 🖼️ 头像配置
-const avatarA = 'http://q.qlogo.cn/headimg_dl?dst_uin=你的QQ号&spec=640'
-const avatarB = 'http://q.qlogo.cn/headimg_dl?dst_uin=对方QQ号&spec=640'
+const avatarA: string | null = 'https://q1.qlogo.cn/g?b=qq&nk=3486159271&s=640'
+const avatarB: string | null = 'https://q1.qlogo.cn/g?b=qq&nk=1789859045&s=640'
 ```
 
-### 添加新记忆
+可以在这里调整：
 
-1. 在 `src/data/events.json` 新增一条事件记录
-2. 将照片放入 `src/assets/images/YYYY-MM-DD/` 目录
-3. ✨ 图片会自动加载，无需额外配置
+- 恋爱开始时间
+- 两个人的名字
+- 头像地址
 
----
+### 2. 添加新的时间轴事件
 
-<p align="center">
-  <sub>Made with ❤️ for the one you love</sub>
-</p>
+编辑 `src/data/events.json`，新增一条记录：
+
+```json
+{
+  "id": 5,
+  "date": "2026-04-20",
+  "title": "新的回忆",
+  "description": "这里写这一天发生的事。",
+  "location": "杭州",
+  "tags": ["约会", "散步"]
+}
+```
+
+字段说明：
+
+- `id`: 唯一编号
+- `date`: 日期，格式必须是 `YYYY-MM-DD`
+- `title`: 事件标题
+- `description`: 事件描述
+- `location`: 地点
+- `tags`: 标签数组，用于标签页筛选
+
+### 3. 给事件添加照片
+
+把对应日期的照片放进：
+
+```text
+src/assets/images/YYYY-MM-DD/
+```
+
+例如：
+
+```text
+src/assets/images/2026-04-20/01.jpg
+src/assets/images/2026-04-20/02.jpg
+src/assets/images/2026-04-20/03.jpg
+```
+
+项目会通过 `src/lib/images.ts` 自动扫描该目录并按日期聚合图片，所以：
+
+- 不需要手动 `import` 每张图片
+- 只要目录名和 `events.json` 里的 `date` 一致，页面就会自动关联
+
+## 项目结构
+
+```text
+src/
+  main.tsx
+  App.tsx
+  App.css
+  index.css
+  data/
+    events.json
+  lib/
+    images.ts
+    gallery.ts
+    easter-eggs.ts
+    utils.ts
+  router/
+    index.tsx
+  pages/
+    Home/
+    Timeline/
+    Tag/
+  components/
+    easter-eggs/
+    ui/
+  assets/
+    hero.png
+    images/YYYY-MM-DD/
+public/
+  favicon.svg
+  icons.svg
+  CNAME
+```
+
+补充约定：
+
+- `src/components/ui/` 是 shadcn/ui 生成目录，尽量不要手改生成文件
+- 静态稳定资源放 `public/`
+- 时间轴照片放 `src/assets/images/YYYY-MM-DD/`
+
+## 样式与前端约定
+
+- 使用 Tailwind CSS v4，没有单独的 `tailwind.config.js`
+- 设计 token 主要放在 `src/index.css`
+- `@/` 路径别名指向 `src/`
+- 导入本地 TS/TSX 文件时使用显式扩展名，例如 `./App.tsx`
+- TypeScript 开启了严格规则：
+  - `noUnusedLocals`
+  - `noUnusedParameters`
+  - `verbatimModuleSyntax`
+  - `erasableSyntaxOnly`
+
+## 架构说明
+
+- 当前没有后端，所有内容都保存在前端项目中
+- 如果以后接后端，建议新增 `src/services/` 作为数据访问层
+- 不要把未来的 `fetch` 逻辑直接塞进 UI 组件
+
+## 部署
+
+项目已包含 GitHub Pages 工作流：推送到 `master` 后会自动构建并发布 `dist/`。
+
+也可以手动部署：
+
+```bash
+npm run deploy
+```
+
+当前部署相关配置：
+
+- GitHub Actions 文件：`.github/workflows/deploy.yml`
+- 自定义域名：`public/CNAME`
+- Vite `base`：`/`
+- 路由方式：`BrowserRouter`
+
+注意：
+
+- 现在这套配置更适合部署在站点根路径，例如自定义域名根域
+- 如果以后改成 GitHub Pages 子路径部署，通常需要同时调整 `vite.config.ts` 的 `base` 和路由策略
